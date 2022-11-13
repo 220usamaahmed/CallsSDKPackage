@@ -1,0 +1,11 @@
+framework module CallsSDK {
+  umbrella header "CallsSDK.h"
+
+  export *
+  module * { export * }
+}
+
+module CallsSDK.Swift {
+  header "CallsSDK-Swift.h"
+  requires objc
+}

@@ -1,0 +1,387 @@
+// swift-interface-format-version: 1.0
+// swift-compiler-version: Apple Swift version 5.7.1 (swiftlang-5.7.1.135.3 clang-1400.0.29.51)
+// swift-module-flags: -target arm64-apple-ios14.0 -enable-objc-interop -enable-library-evolution -swift-version 5 -enforce-exclusivity=checked -Onone -module-name CallsSDK
+// swift-module-flags-ignorable: -enable-bare-slash-regex
+import AVFoundation
+import CallKit
+@_exported import CallsSDK
+import Combine
+import Foundation
+import Photos
+import Swift
+import SwiftUI
+import UIKit
+import WebRTC
+import _Concurrency
+import _StringProcessing
+@_Concurrency.MainActor(unsafe) public struct RtcCallView : SwiftUI.View {
+  @_Concurrency.MainActor(unsafe) public init(_ rtcClient: CallsSDK.RtcClient)
+  @_Concurrency.MainActor(unsafe) public var body: some SwiftUI.View {
+    get
+  }
+  public typealias Body = @_opaqueReturnTypeOf("$s8CallsSDK11RtcCallViewV4bodyQrvp", 0) __
+}
+@objc public class RtcClient : ObjectiveC.NSObject, Foundation.ObservableObject {
+  public var callView: CallsSDK.RtcCallView?
+  public init(config: CallsSDK.CallConfig, initialDeviceSettings: CallsSDK.InitialDeviceSettings? = nil)
+  public func start()
+  public func stop()
+  public func requestEndCall()
+  public func closeWindow()
+  public typealias ObjectWillChangePublisher = Combine.ObservableObjectPublisher
+  @objc deinit
+}
+extension CallsSDK.RtcClient : WebRTC.RTCAudioSessionDelegate {
+  @objc dynamic public func audioSession(_ audioSession: WebRTC.RTCAudioSession, didSetActive active: Swift.Bool)
+}
+extension CallsSDK.RtcClient : CallsSDK.RtcSignalsDelegate {
+  public func SocketConnected()
+  public func SocketDisconnected(closing: Swift.Bool)
+  public func Authenticated(authSession: CallsSDK.CommsAuthSession)
+  public func SessionAuthenticationFailed(errorMessage: Swift.String)
+  public func OnRoomJoined(msg: CallsSDK.JoinRoomResponse)
+  public func ParticipantJoined(msg: CallsSDK.CommsParticipant)
+  public func ParticipantLeft(msg: CallsSDK.ParticipantLeftMessage)
+  public func ParticipantConnectionProblem(msg: CallsSDK.ParticipantGenericMessage)
+  public func ParticipantConnectionRecovered(msg: CallsSDK.ParticipantGenericMessage)
+  public func ParticipantIceCandidate(msg: CallsSDK.RemoteIceCandidate)
+  public func ParticipantMediaStateChanged(msg: CallsSDK.ParticipantDeviceStateMessage)
+  public func OnScreenStateAction(msg: CallsSDK.ScreenStateMessage)
+}
+public typealias CommsEventListener = (_ event: Swift.String, _ param: Swift.String) -> ()
+public enum CallState {
+  case Incoming
+  case Outgoing
+  case Ringing
+  case Connecting
+  case Connected
+  case Ending
+  case Ended
+  public static func == (a: CallsSDK.CallState, b: CallsSDK.CallState) -> Swift.Bool
+  public func hash(into hasher: inout Swift.Hasher)
+  public var hashValue: Swift.Int {
+    get
+  }
+}
+public struct CallConfig {
+  public var mainServer: Swift.String
+  public var roomId: Swift.String
+  public var callType: Swift.String
+  public var authToken: Swift.String?
+  public var userId: Swift.String
+  public var fullName: Swift.String
+  public var imageUrl: Swift.String?
+  public var inviteToken: Swift.String?
+  public var displayWaitingScreen: Swift.Bool
+  public var displayThankyouScreen: Swift.Bool
+  public let eventListener: CallsSDK.CommsEventListener
+  public init(mainServer: Swift.String, roomId: Swift.String, callType: Swift.String, authToken: Swift.String?, userId: Swift.String, fullName: Swift.String, imageUrl: Swift.String?, displayWaitingScreen: Swift.Bool = true, displayThankyouScreen: Swift.Bool = true, inviteToken: Swift.String?, eventListener: @escaping CallsSDK.CommsEventListener)
+}
+public struct InitialDeviceSettings {
+  public let CamActive: Swift.Bool
+  public let MicActive: Swift.Bool
+  public let FrontCamera: Swift.Bool
+}
+public struct PushUser : Swift.Codable {
+  public func encode(to encoder: Swift.Encoder) throws
+  public init(from decoder: Swift.Decoder) throws
+}
+public struct CommsUser : Swift.Codable {
+  public let user_id: Swift.String
+  public let user_name: Swift.String
+  public let user_image: Swift.String?
+  public init(user_id: Swift.String, user_name: Swift.String, user_image: Swift.String?)
+  public init(from decoder: Swift.Decoder) throws
+  public func encode(to encoder: Swift.Encoder) throws
+}
+public struct ParticipantDeviceStateMessage : Swift.Codable {
+  public func encode(to encoder: Swift.Encoder) throws
+  public init(from decoder: Swift.Decoder) throws
+}
+public struct CommsAuthSession : Swift.Codable {
+  public func encode(to encoder: Swift.Encoder) throws
+  public init(from decoder: Swift.Decoder) throws
+}
+public class CommsParticipantDeviceState : Swift.Codable {
+  public var audioActive: Swift.Bool
+  public var videoActive: Swift.Bool
+  public var screenActive: Swift.Bool
+  public var pinnedParticipant: Swift.String?
+  @objc deinit
+  public func encode(to encoder: Swift.Encoder) throws
+  required public init(from decoder: Swift.Decoder) throws
+}
+public struct CommsParticipant : Swift.Codable, Swift.Identifiable {
+  public var id: Swift.String
+  public var metadata: CallsSDK.CommsUser
+  public var deviceState: CallsSDK.CommsParticipantDeviceState?
+  public typealias ID = Swift.String
+  public func encode(to encoder: Swift.Encoder) throws
+  public init(from decoder: Swift.Decoder) throws
+}
+public struct ParticipantLeftMessage : Swift.Codable {
+  public var id: Swift.String
+  public var metadata: CallsSDK.CommsUser
+  public var ended_by: Swift.String?
+  public func encode(to encoder: Swift.Encoder) throws
+  public init(from decoder: Swift.Decoder) throws
+}
+public struct ParticipantGenericMessage : Swift.Codable {
+  public func encode(to encoder: Swift.Encoder) throws
+  public init(from decoder: Swift.Decoder) throws
+}
+public struct JoinRoomResponse : Swift.Codable {
+  public func encode(to encoder: Swift.Encoder) throws
+  public init(from decoder: Swift.Decoder) throws
+}
+public struct RemoteIceCandidate : Swift.Codable {
+  public func encode(to encoder: Swift.Encoder) throws
+  public init(from decoder: Swift.Decoder) throws
+}
+public struct EmptyRequest : Swift.Codable {
+  public func encode(to encoder: Swift.Encoder) throws
+  public init(from decoder: Swift.Decoder) throws
+}
+public struct RecordingInfo : Swift.Codable {
+  public func encode(to encoder: Swift.Encoder) throws
+  public init(from decoder: Swift.Decoder) throws
+}
+public struct RenegotiateResponse : Swift.Codable {
+  public func encode(to encoder: Swift.Encoder) throws
+  public init(from decoder: Swift.Decoder) throws
+}
+public struct ScreenStateMessage : Swift.Codable {
+  public func encode(to encoder: Swift.Encoder) throws
+  public init(from decoder: Swift.Decoder) throws
+}
+public class CommsCall : Swift.Equatable, Foundation.ObservableObject {
+  final public let room_id: Swift.String
+  final public let uuid: Foundation.UUID
+  final public let call_type: Swift.String
+  final public let is_cc_call: Swift.Bool
+  final public let invite_token: Swift.String?
+  final public let caller: CallsSDK.CommsUser
+  final public let recipient: CallsSDK.CommsUser
+  final public let myself: CallsSDK.CommsUser
+  final public let auth_token: Swift.String?
+  final public let base_url: Swift.String?
+  @Combine.Published @_projectedValueProperty($state) public var state: CallsSDK.CallState {
+    get
+    set
+  }
+  public var $state: Combine.Published<CallsSDK.CallState>.Publisher {
+    get
+    @available(iOS 14.0, tvOS 14.0, watchOS 7.0, macOS 11.0, *)
+    set
+  }
+  @Combine.Published @_projectedValueProperty($hasError) public var hasError: Swift.Bool {
+    get
+    set
+    _modify
+  }
+  public var $hasError: Combine.Published<Swift.Bool>.Publisher {
+    get
+    @available(iOS 14.0, tvOS 14.0, watchOS 7.0, macOS 11.0, *)
+    set
+  }
+  @Combine.Published @_projectedValueProperty($errorMessage) public var errorMessage: Swift.String? {
+    get
+    set
+    _modify
+  }
+  public var $errorMessage: Combine.Published<Swift.String?>.Publisher {
+    get
+    @available(iOS 14.0, tvOS 14.0, watchOS 7.0, macOS 11.0, *)
+    set
+  }
+  public static func == (lhs: CallsSDK.CommsCall, rhs: CallsSDK.CommsCall) -> Swift.Bool
+  public init(room_id: Swift.String, call_type: Swift.String, is_cc_call: Swift.Bool, invite_token: Swift.String?, caller: CallsSDK.CommsUser, recipient: CallsSDK.CommsUser, myself: CallsSDK.CommsUser, state: CallsSDK.CallState, authToken: Swift.String?, baseUrl: Swift.String?)
+  public typealias ObjectWillChangePublisher = Combine.ObservableObjectPublisher
+  @objc deinit
+}
+public struct CommsIncomingCallEvent {
+  public let id: Swift.Int
+  public let base_url: Swift.String
+  public let auth_token: Swift.String?
+  public let call: CallsSDK.CommsCall
+  public static func make(payload: [Swift.AnyHashable : Any]) -> CallsSDK.CommsIncomingCallEvent?
+}
+public struct GenericErrorResponse : Swift.Codable {
+  public var errorCode: Swift.Int
+  public var errorMessage: Swift.String
+  public var statusMessage: Swift.String
+  public func encode(to encoder: Swift.Encoder) throws
+  public init(from decoder: Swift.Decoder) throws
+}
+public struct CommsCallParticipant : Swift.Codable {
+  public let user_id: Swift.String
+  public let name: Swift.String
+  public let image: Swift.String?
+  public let invite_token: Swift.String?
+  public var call_state: Swift.String
+  public init(user_id: Swift.String, name: Swift.String, image: Swift.String?, invite_token: Swift.String?)
+  public func encode(to encoder: Swift.Encoder) throws
+  public init(from decoder: Swift.Decoder) throws
+}
+public struct CommsRpcRequestParams : Swift.Codable {
+  public let room_id: Swift.String
+  public let to_cc: Swift.Bool?
+  public let call_state: Swift.String?
+  public let call_type: Swift.String?
+  public let invite_token: Swift.String?
+  public let recipients: [CallsSDK.CommsCallParticipant]?
+  public init(room_id: Swift.String, to_cc: Swift.Bool?, call_state: Swift.String?, call_type: Swift.String?, invite_token: Swift.String?, recipients: [CallsSDK.CommsCallParticipant]?)
+  public func encode(to encoder: Swift.Encoder) throws
+  public init(from decoder: Swift.Decoder) throws
+}
+public struct CommsRpcEventParams : Swift.Codable {
+  public let name: Swift.String?
+  public let user_id: Swift.String?
+  public let call_state: Swift.String?
+  public let room_id: Swift.String?
+  public let invite_token: Swift.String?
+  public let is_cc_call: Swift.Bool?
+  public let call_type: Swift.String?
+  public let caller: CallsSDK.CommsUser?
+  public let recipient: CallsSDK.CommsUser?
+  public func encode(to encoder: Swift.Encoder) throws
+  public init(from decoder: Swift.Decoder) throws
+}
+public typealias RpcEventParams = [Swift.String : Any]
+public struct CommsRpcCallEvent : Swift.Codable {
+  public let id: Swift.Int
+  public let method: Swift.String?
+  public let params: CallsSDK.CommsRpcEventParams?
+  public var result: CallsSDK.CommsRpcActionResult?
+  public func encode(to encoder: Swift.Encoder) throws
+  public init(from decoder: Swift.Decoder) throws
+}
+public struct CommsRpcRequest : Swift.Codable {
+  public func encode(to encoder: Swift.Encoder) throws
+  public init(from decoder: Swift.Decoder) throws
+}
+public struct CommsRpcActionResult : Swift.Codable {
+  public let Status: Swift.String
+  public let ErrorCode: Swift.Int
+  public let ErrorMessage: Swift.String
+  public func encode(to encoder: Swift.Encoder) throws
+  public init(from decoder: Swift.Decoder) throws
+}
+public struct RegisterDeviceRequest : Swift.Codable {
+  public init(pk_token: Swift.String, pn_token: Swift.String, bundle_id: Swift.String)
+  public func encode(to encoder: Swift.Encoder) throws
+  public init(from decoder: Swift.Decoder) throws
+}
+public struct GenericSuccessResponse : Swift.Codable {
+  public var Status: Swift.String?
+  public var ErrorCode: Swift.Int?
+  public var ErrorMessage: Swift.String?
+  public var statusMessage: Swift.String?
+  public func encode(to encoder: Swift.Encoder) throws
+  public init(from decoder: Swift.Decoder) throws
+}
+@_Concurrency.MainActor(unsafe) public struct CallRingView : SwiftUI.View {
+  @_Concurrency.MainActor(unsafe) public init(activeCall: CallsSDK.CommsCall, eventListener: @escaping CallsSDK.CommsEventListener)
+  @_Concurrency.MainActor(unsafe) public var body: some SwiftUI.View {
+    get
+  }
+  public typealias Body = @_opaqueReturnTypeOf("$s8CallsSDK12CallRingViewV4bodyQrvp", 0) __
+}
+public typealias RpcEventResult = (CallsSDK.ApiPayload) -> Swift.Void
+public protocol ServerEventProtocol {
+  func onServerEvent(_ ev: CallsSDK.CommsRpcCallEvent, result: @escaping CallsSDK.RpcEventResult)
+}
+final public class CommsRpcHelper {
+  public init()
+  final public func setEventDelegate(_ delegate: CallsSDK.ServerEventProtocol)
+  final public func startFetchingTimer()
+  final public func stopFetchingTimer()
+  final public func sendRpcAction(method: Swift.String, params: CallsSDK.CommsRpcRequestParams, onRpcSuccess: @escaping (CallsSDK.CommsRpcActionResult) -> Swift.Void, onRpcError: @escaping (CallsSDK.GenericErrorResponse) -> Swift.Void)
+  @objc deinit
+}
+public typealias ApiPayload = [Swift.String : Any]
+public typealias RpcResponseSuccess = () -> Swift.Void
+public typealias RpcResponseError = (CallsSDK.GenericErrorResponse) -> Swift.Void
+@_hasMissingDesignatedInitializers public class ApiClient {
+  public static func isInitialised() -> Swift.Bool
+  public static func isAuthenticated() -> Swift.Bool
+  public static func setBaseUrl(baseUrl: Swift.String)
+  public static func setAuthToken(token: Swift.String)
+  public static func SendRpcResponse(eventId: Swift.Int, result: CallsSDK.ApiPayload, onSuccess: @escaping CallsSDK.RpcResponseSuccess, onError: @escaping CallsSDK.RpcResponseError)
+  public static func GetMessages(onSuccess: @escaping ([CallsSDK.CommsRpcCallEvent]) -> Swift.Void, onError: @escaping (CallsSDK.GenericErrorResponse) -> Swift.Void)
+  public static func SendCallAction(req: CallsSDK.CommsRpcRequest, onSuccess: @escaping (CallsSDK.CommsRpcCallEvent) -> Swift.Void, onError: @escaping (CallsSDK.GenericErrorResponse) -> Swift.Void)
+  public static func RegisterDevice(req: CallsSDK.RegisterDeviceRequest, onSuccess: @escaping (CallsSDK.GenericSuccessResponse) -> Swift.Void, onError: @escaping (CallsSDK.GenericErrorResponse) -> Swift.Void)
+  @objc deinit
+}
+extension Foundation.Data {
+  public var hexString: Swift.String {
+    get
+  }
+}
+extension Swift.String {
+  public func index(from: Swift.Int) -> Swift.String.Index
+  public func Substring(from: Swift.Int) -> Swift.String
+  public func Substring(to: Swift.Int) -> Swift.String
+  public func Substring(with r: Swift.Range<Swift.Int>) -> Swift.String
+  public func RoomIdtoUUID() -> Foundation.UUID?
+}
+extension UserNotifications.UNNotificationCategoryOptions {
+  public static let stringToValue: [Swift.String : UserNotifications.UNNotificationCategoryOptions]
+}
+extension UserNotifications.UNNotificationActionOptions {
+  public static let stringToValue: [Swift.String : UserNotifications.UNNotificationActionOptions]
+}
+extension SwiftUI.View {
+  public func onRotate(perform action: @escaping (UIKit.UIDeviceOrientation) -> Swift.Void) -> some SwiftUI.View
+  
+}
+public typealias RpcCompletion = (Foundation.Data?, Swift.Error?) -> ()
+public protocol RpcClient {
+  func sendRpcRequest<T>(_ method: Swift.String, params: T, completion: @escaping CallsSDK.RpcCompletion) where T : Swift.Decodable, T : Swift.Encodable
+}
+public protocol RtcSignalsDelegate {
+  func SocketConnected()
+  func SocketDisconnected(closing: Swift.Bool)
+  func Authenticated(authSession: CallsSDK.CommsAuthSession)
+  func SessionAuthenticationFailed(errorMessage: Swift.String)
+  func OnRoomJoined(msg: CallsSDK.JoinRoomResponse)
+  func ParticipantJoined(msg: CallsSDK.CommsParticipant)
+  func ParticipantLeft(msg: CallsSDK.ParticipantLeftMessage)
+  func ParticipantConnectionProblem(msg: CallsSDK.ParticipantGenericMessage)
+  func ParticipantConnectionRecovered(msg: CallsSDK.ParticipantGenericMessage)
+  func ParticipantIceCandidate(msg: CallsSDK.RemoteIceCandidate)
+  func ParticipantMediaStateChanged(msg: CallsSDK.ParticipantDeviceStateMessage)
+  func OnScreenStateAction(msg: CallsSDK.ScreenStateMessage)
+}
+@objc @_inheritsConvenienceInitializers public class DeviceTools : ObjectiveC.NSObject {
+  public static let shared: CallsSDK.DeviceTools
+  public var cameraPermission: Swift.Bool
+  public var micPermission: Swift.Bool
+  @objc override dynamic public init()
+  @objc deinit
+}
+public protocol CallQueueProtocol {
+  func onActiveCallChanged(_ call: CallsSDK.CommsCall?, oldCall: CallsSDK.CommsCall?)
+  func onCallQueueChanged()
+}
+@objc @_inheritsConvenienceInitializers final public class CallQueue : ObjectiveC.NSObject {
+  final public func setDelegate(_ delegate: CallsSDK.CallQueueProtocol)
+  final public var activeCall: CallsSDK.CommsCall? {
+    get
+    set
+  }
+  final public func addCall(call: CallsSDK.CommsCall)
+  final public func removeCall(_ roomId: Swift.String)
+  final public func findCall(_ roomId: Swift.String) -> CallsSDK.CommsCall?
+  final public func findCall(_ uuid: Foundation.UUID) -> CallsSDK.CommsCall?
+  @objc override dynamic public init()
+  @objc deinit
+}
+@objc @_inheritsConvenienceInitializers public class AuthorizationCheck : ObjectiveC.NSObject {
+  public static func showMicrophoneUnauthorizedAlert(_ viewController: UIKit.UIViewController)
+  public static func showCameraUnauthorizedAlert(_ viewController: UIKit.UIViewController)
+  @objc override dynamic public init()
+  @objc deinit
+}
+extension CallsSDK.CallState : Swift.Equatable {}
+extension CallsSDK.CallState : Swift.Hashable {}
